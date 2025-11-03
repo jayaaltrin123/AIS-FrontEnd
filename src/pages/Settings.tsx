@@ -295,58 +295,105 @@ const SettingsPage: React.FC = () => {
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <motion.div 
+      className="p-6 space-y-6"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <motion.div 
+        className="flex items-center justify-between"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+      >
         <div className="flex items-center gap-3">
-          <div className="p-2 rounded-lg" style={{ background: 'linear-gradient(135deg, #8b5cf6, #3baed9)' }}>
-            <Settings className="w-5 h-5 text-white" />
-          </div>
+          <motion.div 
+            className="p-3 rounded-xl" 
+            style={{ background: 'linear-gradient(135deg, #8b5cf6, #3baed9)' }}
+            animate={{
+              rotate: [0, 360],
+            }}
+            transition={{
+              duration: 20,
+              repeat: Infinity,
+              ease: 'linear',
+            }}
+          >
+            <Settings className="w-6 h-6 text-white" />
+          </motion.div>
           <div>
-            <h2 className="text-xl font-bold text-white glow-text">Settings</h2>
+            <h2 className="text-2xl font-bold text-white glow-text">Settings</h2>
             <p className="text-sm text-text-secondary">Configure your system preferences</p>
           </div>
         </div>
         {hasChanges && (
-          <button
+          <motion.button
             onClick={handleSave}
             className="btn btn-primary flex items-center gap-2"
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
             <Save className="w-4 h-4" />
             Save Changes
-          </button>
+          </motion.button>
         )}
-      </div>
+      </motion.div>
 
       {/* Settings Sections */}
       <div className="space-y-6">
-        {settings.map((section) => (
+        {settings.map((section, index) => (
           <motion.div
             key={section.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="card p-6"
+            initial={{ opacity: 0, y: 30, x: -20 }}
+            animate={{ opacity: 1, y: 0, x: 0 }}
+            transition={{ delay: 0.2 + index * 0.1, duration: 0.4 }}
+            className="card p-6 rounded-xl"
+            whileHover={{ 
+              scale: 1.01,
+              boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)'
+            }}
           >
-            <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 rounded-lg bg-white/5">
+            <motion.div 
+              className="flex items-center gap-3 mb-6"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 + index * 0.1 }}
+            >
+              <motion.div 
+                className="p-3 rounded-xl bg-white/5"
+                whileHover={{ scale: 1.1, rotate: 5 }}
+              >
                 <section.icon className="w-5 h-5 text-aqua-blue" />
-              </div>
+              </motion.div>
               <h3 className="text-lg font-semibold text-white">{section.title}</h3>
-            </div>
+            </motion.div>
 
             <div className="space-y-6">
-              {section.settings.map((setting) => (
-                <div key={setting.id} className="flex items-start justify-between gap-4 pb-6 border-b border-white/10 last:border-0 last:pb-0">
+              {section.settings.map((setting, settingIndex) => (
+                <motion.div 
+                  key={setting.id} 
+                  className="flex items-start justify-between gap-4 pb-6 border-b border-white/10 last:border-0 last:pb-0"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.4 + index * 0.1 + settingIndex * 0.05 }}
+                >
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
                       <label className="text-white font-medium">{setting.label}</label>
                     </div>
                     <p className="text-sm text-text-secondary">{setting.description}</p>
                   </div>
-                  <div className="flex items-center">
+                  <motion.div 
+                    className="flex items-center"
+                    whileHover={{ scale: 1.05 }}
+                  >
                     {renderSettingControl(setting, section.id)}
-                  </div>
-                </div>
+                  </motion.div>
+                </motion.div>
               ))}
             </div>
           </motion.div>
@@ -398,7 +445,7 @@ const SettingsPage: React.FC = () => {
           }}
         />
       </motion.div>
-    </div>
+    </motion.div>
   );
 };
 

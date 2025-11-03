@@ -103,62 +103,103 @@ const Ships: React.FC<ShipsProps> = ({ onShipSelect }) => {
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <motion.div 
+      className="p-6 space-y-6"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <motion.div 
+        className="flex items-center justify-between"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+      >
         <div className="flex items-center gap-3">
-          <div className="p-2 rounded-lg" style={{ background: 'linear-gradient(135deg, #3baed9, #5bc0de)' }}>
-            <Ship className="w-5 h-5 text-white" />
-          </div>
+          <motion.div 
+            className="p-3 rounded-xl" 
+            style={{ background: 'linear-gradient(135deg, #3baed9, #5bc0de)' }}
+            animate={{
+              rotate: [0, 5, -5, 0],
+              boxShadow: ['0 4px 15px rgba(59, 174, 217, 0.3)', '0 8px 25px rgba(59, 174, 217, 0.5)', '0 4px 15px rgba(59, 174, 217, 0.3)'],
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }}
+          >
+            <Ship className="w-6 h-6 text-white" />
+          </motion.div>
           <div>
-            <h2 className="text-xl font-bold text-white glow-text">Ships Registry</h2>
+            <h2 className="text-2xl font-bold text-white glow-text">Ships Registry</h2>
             <p className="text-sm text-text-secondary">Monitor and track all vessels in the system</p>
           </div>
         </div>
-        <button
+        <motion.button
           onClick={() => setShowMap(!showMap)}
           className="btn btn-secondary flex items-center gap-2"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
         >
           {showMap ? 'Hide Map' : 'Show Map'}
-        </button>
-      </div>
+        </motion.button>
+      </motion.div>
 
       {/* Search and Filters */}
-      <div className="card p-4">
+      <motion.div 
+        className="card p-5"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+      >
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-text-secondary w-5 h-5" />
+            <motion.div
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 text-text-secondary"
+              animate={{
+                scale: searchQuery ? [1, 1.1, 1] : 1,
+              }}
+              transition={{ duration: 0.3 }}
+            >
+              <Search className="w-5 h-5" />
+            </motion.div>
             <input
               type="text"
               placeholder="Search by name, MMSI, or type..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-text-secondary focus:outline-none focus:border-aqua-blue"
+              className="w-full pl-12 pr-4 py-3 bg-white/8 border-2 border-white/15 rounded-xl text-white placeholder-text-secondary focus:outline-none focus:border-aqua-blue focus:ring-4 focus:ring-aqua-blue/30 transition-all text-base hover:bg-white/10"
+              style={{ height: '52px' }}
             />
           </div>
           <div className="flex gap-2">
             {(['all', 'normal', 'warning', 'danger'] as const).map((status) => (
-              <button
+              <motion.button
                 key={status}
                 onClick={() => setSelectedStatus(status)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
                   selectedStatus === status
                     ? status === 'all'
-                      ? 'bg-aqua-blue text-white'
+                      ? 'bg-aqua-blue text-white shadow-lg'
                       : status === 'danger'
-                      ? 'bg-danger-red text-white'
+                      ? 'bg-danger-red text-white shadow-lg'
                       : status === 'warning'
-                      ? 'bg-warning-orange text-white'
-                      : 'bg-success-green text-white'
-                    : 'bg-white/5 text-text-secondary hover:bg-white/10'
+                      ? 'bg-warning-orange text-white shadow-lg'
+                      : 'bg-success-green text-white shadow-lg'
+                    : 'bg-white/8 text-text-secondary hover:bg-white/10 border-2 border-white/15'
                 }`}
+                style={{ height: '52px' }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
                 {status.charAt(0).toUpperCase() + status.slice(1)}
-              </button>
+              </motion.button>
             ))}
           </div>
         </div>
-      </div>
+      </motion.div>
 
       <div className={`grid ${showMap ? 'grid-cols-1 lg:grid-cols-2' : 'grid-cols-1'} gap-6`}>
         {/* Ships List */}
@@ -170,15 +211,22 @@ const Ships: React.FC<ShipsProps> = ({ onShipSelect }) => {
           </div>
 
           <div className="space-y-3 max-h-[600px] overflow-y-auto">
-            {filteredShips.map((ship) => (
+            {filteredShips.map((ship, index) => (
               <motion.div
                 key={ship.mmsi}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, y: 20, x: -20 }}
+                animate={{ opacity: 1, y: 0, x: 0 }}
+                transition={{ delay: index * 0.03, duration: 0.4 }}
                 onClick={() => handleShipClick(ship)}
-                className={`card p-4 cursor-pointer hover:bg-white/10 transition-all ${
-                  selectedShip?.mmsi === ship.mmsi ? 'ring-2 ring-aqua-blue' : ''
+                className={`card p-5 cursor-pointer hover:bg-white/10 transition-all rounded-xl ${
+                  selectedShip?.mmsi === ship.mmsi ? 'ring-2 ring-aqua-blue shadow-lg' : ''
                 }`}
+                whileHover={{ 
+                  scale: 1.02,
+                  y: -4,
+                  boxShadow: '0 8px 25px rgba(0, 0, 0, 0.3)'
+                }}
+                whileTap={{ scale: 0.98 }}
               >
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-3">
@@ -235,10 +283,12 @@ const Ships: React.FC<ShipsProps> = ({ onShipSelect }) => {
         {/* Map View */}
         {showMap && (
           <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="card gradient-border hover-tilt"
+            initial={{ opacity: 0, x: 20, scale: 0.95 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+            className="card gradient-border hover-tilt rounded-xl"
             style={{ padding: '1rem', height: '600px' }}
+            whileHover={{ scale: 1.01 }}
           >
             <div className="flex items-center gap-3 mb-4">
               <div className="p-2 rounded-lg glow-pulse" style={{ background: 'linear-gradient(135deg, #3baed9, #5bc0de)' }}>
@@ -322,7 +372,7 @@ const Ships: React.FC<ShipsProps> = ({ onShipSelect }) => {
           </div>
         </motion.div>
       )}
-    </div>
+    </motion.div>
   );
 };
 

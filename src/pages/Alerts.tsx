@@ -160,66 +160,109 @@ const Alerts: React.FC<AlertsProps> = ({ alerts: externalAlerts, onAlertsUpdate 
     }));
 
   return (
-    <div className="p-6 space-y-6">
+    <motion.div 
+      className="p-6 space-y-6"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <motion.div 
+        className="flex items-center justify-between"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+      >
         <div className="flex items-center gap-3">
-          <div className="p-2 rounded-lg" style={{ background: 'linear-gradient(135deg, #e63946, #f77f00)' }}>
-            <AlertTriangle className="w-5 h-5 text-white" />
-          </div>
+          <motion.div 
+            className="p-3 rounded-xl" 
+            style={{ background: 'linear-gradient(135deg, #e63946, #f77f00)' }}
+            animate={{
+              boxShadow: ['0 4px 15px rgba(230, 57, 70, 0.3)', '0 8px 25px rgba(230, 57, 70, 0.5)', '0 4px 15px rgba(230, 57, 70, 0.3)'],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }}
+          >
+            <AlertTriangle className="w-6 h-6 text-white" />
+          </motion.div>
           <div>
-            <h2 className="text-xl font-bold text-white glow-text">Alert Management</h2>
+            <h2 className="text-2xl font-bold text-white glow-text">Alert Management</h2>
             <p className="text-sm text-text-secondary">
               {alerts.filter(a => a.status === 'active').length} active alerts • {alerts.filter(a => a.severity === 'critical').length} critical
             </p>
           </div>
         </div>
-        <button
+        <motion.button
           onClick={() => setShowMap(!showMap)}
           className="btn btn-secondary flex items-center gap-2"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
         >
           {showMap ? 'Hide Map' : 'Show Map'}
-        </button>
-      </div>
+        </motion.button>
+      </motion.div>
 
       {/* Search and Filters */}
-      <div className="card p-4">
+      <motion.div 
+        className="card p-5"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+      >
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-text-secondary w-5 h-5" />
+            <motion.div
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 text-text-secondary"
+              animate={{
+                scale: searchQuery ? [1, 1.1, 1] : 1,
+              }}
+              transition={{ duration: 0.3 }}
+            >
+              <Search className="w-5 h-5" />
+            </motion.div>
             <input
               type="text"
               placeholder="Search alerts..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-text-secondary focus:outline-none focus:border-aqua-blue"
+              className="w-full pl-12 pr-4 py-3 bg-white/8 border-2 border-white/15 rounded-xl text-white placeholder-text-secondary focus:outline-none focus:border-aqua-blue focus:ring-4 focus:ring-aqua-blue/30 transition-all text-base hover:bg-white/10"
+              style={{ height: '52px' }}
             />
           </div>
           <div className="flex gap-2 flex-wrap">
-            <select
+            <motion.select
               value={selectedSeverity}
               onChange={(e) => setSelectedSeverity(e.target.value as any)}
-              className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:border-aqua-blue"
+              className="px-4 py-3 bg-white/8 border-2 border-white/15 rounded-xl text-white text-sm focus:outline-none focus:border-aqua-blue focus:ring-4 focus:ring-aqua-blue/30 transition-all"
+              style={{ height: '52px' }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
               <option value="all">All Severities</option>
               <option value="critical">Critical</option>
               <option value="high">High</option>
               <option value="medium">Medium</option>
               <option value="low">Low</option>
-            </select>
-            <select
+            </motion.select>
+            <motion.select
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value as any)}
-              className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:border-aqua-blue"
+              className="px-4 py-3 bg-white/8 border-2 border-white/15 rounded-xl text-white text-sm focus:outline-none focus:border-aqua-blue focus:ring-4 focus:ring-aqua-blue/30 transition-all"
+              style={{ height: '52px' }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
               <option value="all">All Statuses</option>
               <option value="active">Active</option>
               <option value="acknowledged">Acknowledged</option>
               <option value="resolved">Resolved</option>
-            </select>
+            </motion.select>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       <div className={`grid ${showMap ? 'grid-cols-1 lg:grid-cols-2' : 'grid-cols-1'} gap-6`}>
         {/* Alerts List */}
@@ -231,15 +274,22 @@ const Alerts: React.FC<AlertsProps> = ({ alerts: externalAlerts, onAlertsUpdate 
           </div>
 
           <div className="space-y-3 max-h-[600px] overflow-y-auto">
-            {filteredAlerts.map((alert) => (
+            {filteredAlerts.map((alert, index) => (
               <motion.div
                 key={alert.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, y: 20, x: -20 }}
+                animate={{ opacity: 1, y: 0, x: 0 }}
+                transition={{ delay: index * 0.05, duration: 0.4 }}
                 onClick={() => handleAlertClick(alert)}
-                className={`card p-4 cursor-pointer hover:bg-white/10 transition-all ${
-                  selectedAlert?.id === alert.id ? 'ring-2 ring-aqua-blue' : ''
+                className={`card p-5 cursor-pointer hover:bg-white/10 transition-all rounded-xl ${
+                  selectedAlert?.id === alert.id ? 'ring-2 ring-aqua-blue shadow-lg' : ''
                 } ${alert.status === 'active' ? 'border-l-4 border-aqua-blue' : ''}`}
+                whileHover={{ 
+                  scale: 1.02,
+                  y: -4,
+                  boxShadow: '0 8px 25px rgba(0, 0, 0, 0.3)'
+                }}
+                whileTap={{ scale: 0.98 }}
               >
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-3">
@@ -285,28 +335,37 @@ const Alerts: React.FC<AlertsProps> = ({ alerts: externalAlerts, onAlertsUpdate 
                 </div>
 
                 {alert.status === 'active' && (
-                  <div className="flex gap-2 mt-3">
-                    <button
+                  <motion.div 
+                    className="flex gap-2 mt-4"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.2 }}
+                  >
+                    <motion.button
                       onClick={(e) => {
                         e.stopPropagation();
                         handleAcknowledge(alert.id);
                       }}
-                      className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-yellow-500/20 text-yellow-500 rounded-lg hover:bg-yellow-500/30 transition-colors text-sm"
+                      className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-yellow-500/20 text-yellow-500 rounded-xl hover:bg-yellow-500/30 transition-colors text-sm font-medium"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
                     >
                       <CheckCircle className="w-4 h-4" />
                       Acknowledge
-                    </button>
-                    <button
+                    </motion.button>
+                    <motion.button
                       onClick={(e) => {
                         e.stopPropagation();
                         handleResolve(alert.id);
                       }}
-                      className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-success-green/20 text-success-green rounded-lg hover:bg-success-green/30 transition-colors text-sm"
+                      className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-success-green/20 text-success-green rounded-xl hover:bg-success-green/30 transition-colors text-sm font-medium"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
                     >
                       <XCircle className="w-4 h-4" />
                       Resolve
-                    </button>
-                  </div>
+                    </motion.button>
+                  </motion.div>
                 )}
               </motion.div>
             ))}
@@ -323,10 +382,12 @@ const Alerts: React.FC<AlertsProps> = ({ alerts: externalAlerts, onAlertsUpdate 
         {/* Map View */}
         {showMap && (
           <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="card gradient-border hover-tilt"
+            initial={{ opacity: 0, x: 20, scale: 0.95 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+            className="card gradient-border hover-tilt rounded-xl"
             style={{ padding: '1rem', height: '600px' }}
+            whileHover={{ scale: 1.01 }}
           >
             <div className="flex items-center gap-3 mb-4">
               <div className="p-2 rounded-lg glow-pulse" style={{ background: 'linear-gradient(135deg, #e63946, #f77f00)' }}>
@@ -348,7 +409,7 @@ const Alerts: React.FC<AlertsProps> = ({ alerts: externalAlerts, onAlertsUpdate 
           </motion.div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 };
 
