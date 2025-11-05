@@ -254,7 +254,7 @@ const Login: React.FC<LoginProps> = ({ onNavigate, onSuccess }) => {
               transition={{ delay: 0.3 }}
             >
               <label htmlFor="email" className="block text-base font-medium text-white mb-3">
-                Email Address
+                Email
               </label>
               <div className="relative">
                 <div 
