@@ -264,16 +264,23 @@ const Login: React.FC<LoginProps> = ({ onNavigate, onSuccess }) => {
                   <Mail className="h-5 w-5 text-text-secondary" />
                 </div>
                 <input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className={`w-full pl-14 pr-5 bg-white/8 border-2 ${
-                    errors.email ? 'border-danger-red' : 'border-white/15'
-                  } rounded-2xl text-white placeholder-text-secondary focus:outline-none focus:border-aqua-blue focus:ring-4 focus:ring-aqua-blue/30 transition-all text-base hover:bg-white/10 flex items-center`}
-                  placeholder="Enter your email"
-                  style={{ height: '64px', fontSize: '16px', paddingTop: '0', paddingBottom: '0' }}
-                />
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className={`w-full max-w-sm pl-12 pr-4 py-3 bg-white/10 border ${
+                      errors.email ? 'border-red-500' : 'border-white/20'
+                    } rounded-2xl text-white placeholder-gray-300 
+                    focus:outline-none focus:border-aqua-blue focus:ring-4 focus:ring-aqua-blue/30 
+                    transition-all duration-300 hover:bg-white/15 shadow-sm flex items-center`}
+                    placeholder="Enter your email"
+                    style={{
+                      fontSize: '16px',
+                      height: '56px',
+                      width: '320px',
+                    }}
+                  />
+
               </div>
               {errors.email && (
                 <motion.p 
@@ -304,16 +311,23 @@ const Login: React.FC<LoginProps> = ({ onNavigate, onSuccess }) => {
                   <Lock className="h-5 w-5 text-text-secondary" />
                 </div>
                 <input
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className={`w-full pl-14 pr-16 bg-white/8 border-2 ${
-                    errors.password ? 'border-danger-red' : 'border-white/15'
-                  } rounded-2xl text-white placeholder-text-secondary focus:outline-none focus:border-aqua-blue focus:ring-4 focus:ring-aqua-blue/30 transition-all text-base hover:bg-white/10 flex items-center`}
-                  placeholder="Enter your password"
-                  style={{ height: '64px', fontSize: '16px', paddingTop: '0', paddingBottom: '0' }}
-                />
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className={`w-full max-w-sm pl-12 pr-4 py-3 bg-white/10 border ${
+                      errors.password ? 'border-red-500' : 'border-white/20'
+                    } rounded-2xl text-white placeholder-gray-300 
+                    focus:outline-none focus:border-aqua-blue focus:ring-4 focus:ring-aqua-blue/30 
+                    transition-all duration-300 hover:bg-white/15 shadow-sm flex items-center`}
+                    placeholder="Enter your password"
+                    style={{
+                      fontSize: '16px',
+                      height: '56px',
+                      width: '320px',
+                    }}
+                  />
+
                 <motion.button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
